@@ -2,6 +2,11 @@
   background-color: #fbfbfb;
 }
  
+#header{
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
  .u-section-1 {
   background-image: none;
 }

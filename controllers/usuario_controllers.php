@@ -7,24 +7,32 @@ class usuario_controllers
 {
     public static function login()
     {
-        require_once("views/templates/header.php");
-        require_once("views/login.php");
-        require_once("views/templates/footer.php");
+        
+     
     }
     public static function validar(){
         if ($_POST) {
-            $_SESSION["token"] = $_POST["token"] ;
-            if (!isset($_POST["token"]) || !seg::validaSession($_POST["token"])) {
+
+            $token= filter_var($_POST["token"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $_SESSION["token"] = $token;
+
+            if (!isset($token) || !seg::validaSession($token)) {
                 echo "Acceso restringido";
                 exit();
             }
 
-            $obj = new usuario($_POST["Usuario"], $_POST["Contra"], "");
+            $usuario= filter_var($_POST["Usuario"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $Contra= filter_var($_POST["Contra"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $obj = new usuario($usuario, $Contra, "");
             $resultado = $obj->validar_usuario();
             var_dump($resultado);
+            
             if (count($resultado) > 0) {
                 $_SESSION["usuario"] = $resultado["usuario"];
                 header("location: index.php?c=".seg::codificar("shop")."&m=". seg::codificar("shop1"));
+            }
+            else{
+                header("location: index.php?c=".seg::codificar("principal")."&m=". seg::codificar("index")."&msg=1");
             }
         }
     }

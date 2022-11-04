@@ -22,7 +22,7 @@ class seg{
     public static function compras()
     {
         
-        header("location: index.php?c=".seg::codificar("shop")."&m=". seg::codificar("shop1"));
+        header("location: index.php?c=".seg::codificar("shop")."&m=". seg::codificar("shop1")."#catalogo");
         if (!isset($_COOKIE["compras"])) {
             setcookie("compras", 1);
         } else {

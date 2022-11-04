@@ -1,8 +1,9 @@
 <?php
 if (session_status() == 1) session_start();
 require_once("models/productos_models.php");
+require_once("controllers/shop_controllers.php");
 ?>
-
+<br><br><br>
 <div class="image">
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -33,10 +34,10 @@ require_once("models/productos_models.php");
                     <div class="card h-100" style="width: 20rem;">
                         <img src="img/top.png" class="card-img-top" width="100" height="300" alt="Skyscrapers" />
                         <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
+                            <h5 class="card-title">Nosotros</h5>
                             <p class="card-text">
-                                This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This content is a little bit longer.
+                                Somos una tienda online que se encarga de distribuir articulos y productos de todo tipo,
+                                con mas de 58 años de experiencia en compras online.
                             </p>
                         </div>
                     </div>
@@ -46,8 +47,9 @@ require_once("models/productos_models.php");
                     <div class="card h-100" style="width: 20rem;">
                         <img src="img/top.png" class="card-img-top" width="100" height="300" alt="Los Angeles Skyscrapers" />
                         <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                            <h5 class="card-title">Nuestra Mision</h5>
+                            <p class="card-text">Nuestra misión es ofrecer la mejor calidad de productos al mejor precio y al alcance de tu mano,
+                                siempre estando a la vanguardia de los productos mas solicitados y a los precios mas competitivos</p>
                         </div>
 
                     </div>
@@ -56,11 +58,9 @@ require_once("models/productos_models.php");
                     <div class="card h-100" style="width: 20rem;">
                         <img src="img/top.png" class="card-img-top" width="100" height="300" alt="Palm Springs Road" />
                         <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
+                            <h5 class="card-title">Nuestra Vision</h5>
                             <p class="card-text">
-                                This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This card has even longer content than the first to show
-                                that equal height action.
+                                Nuestra mision es convertirnos en la mejor empresa de compras online del territorio nacional, enfocandonos en priorizar las necesidades de los clientes.
                             </p>
                         </div>
 
@@ -75,40 +75,92 @@ require_once("models/productos_models.php");
         <h1 class="text-center" id="catalogo">CATÁLOGO</h1>
 
         <div class="row">
-            <?php foreach (productos_models::Mostrar() as $producto) {  ?>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="card" style="width: 18rem;">
-                        <img src="../img/producto<?php echo $producto["id"] ?>.png" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h3><?php echo $producto["producto"] ?></h3>
-                            <p class="card-text"><?php echo $producto["descripcion"] ?>.</p>
-                            <p>
-                            <h3><?php echo $producto["precio"] . "$" ?></h3>
-                            <h7>ITBMS: <?php echo $producto["precioventa"] . "$" ?></h7>
+            <?php
+            if (isset($_GET["id"])) {
+                $obj = new productos_models($_GET["id"]);
+                $resultado = $obj->Buscar();
+                $h1 = 1;
+                $n = 6;
+            } else {
+                $resultado = productos_models::Mostrar();
+                $h1 = 2;
+            }
+            ?>
+            <?php foreach ($resultado as $producto) {
+                if ($h1 == 1) {
+                    if (count($resultado) == $n) {
+                        $n = 7; ?>
 
-                            </p>
-
-                            <hr>
-                            <p>Cantidad disponible: <?php echo $producto["cantidad"] ?></p>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <div class="col text-center">
-                                    <form method="post">
-                                        <button type="button" class="btn btn-dark"><i class="bi bi-eye"></i> Ver</button>
-                                        <button type="submit" name="b" class="btn btn-dark"><i class="bi bi-cart-plus"></i> Comprar </button>
-                                        <?php
-                                        if ($_POST) {
-                                            $obj = new seg();
-                                            $h = $obj->compras();
-                                        }
-                                        ?>
-                                    </form>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card" style="width: 18rem;">
+                                <img src="../img/producto<?php echo $resultado["id"] ?>.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h3><?php echo $resultado["producto"] ?></h3>
+                                    <p class="card-text"><?php echo $resultado["descripcion"] ?>.</p>
+                                    <p>
+                                    <h3><?php echo $resultado["precio"] ?>$</h3>
+                                    <h7>ITBMS: <?php echo $resultado["precioventa"] ?> $</h7>
+                                    </p>
+                                    <hr>
+                                    <p>Cantidad disponible: <?php echo $resultado["cantidad"] ?></p>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <div class="col text-center">
+                                            <form method="post">
+                                                <button type="button" class="btn btn-dark"><i class="bi bi-eye"></i> Ver</button>
+                                                <button type="submit" name="b" class="btn btn-dark"><i class="bi bi-cart-plus"></i> Comprar </button>
+                                                <?php
+                                                if ($_POST) {
+                                                    $obj = new seg();
+                                                    $h = $obj->compras();
+                                                }
+                                                ?>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
 
+                    <?php
+                    }
+                } else {
+                    ?>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="card" style="width: 18rem;">
+                            <img src="../img/producto<?php echo $producto["id"] ?>.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h3><?php echo $producto["producto"] ?></h3>
+                                <p class="card-text"><?php echo $producto["descripcion"] ?>.</p>
+                                <p>
+                                <h3><?php echo $producto["precio"] ?>$</h3>
+                                <h7>ITBMS: <?php echo $producto["precioventa"] ?> $</h7>
+                                </p>
+                                <hr>
+                                <p>Cantidad disponible: <?php echo $producto["cantidad"] ?></p>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <div class="col text-center">
+                                        <form method="post">
+                                            <button type="button" class="btn btn-dark"><i class="bi bi-eye"></i> Ver</button>
+                                            <button type="submit" name="b" class="btn btn-dark"><i class="bi bi-cart-plus"></i> Comprar </button>
+                                            <?php
+                                            if ($_POST) {
+                                                $obj = new seg();
+                                                $h = $obj->compras();
+                                            }
+                                            ?>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php } ?>
+                <?php
+                } {
+                ?>
+            <?php }
+            }
+            ?>
         </div>
 
     </div>
